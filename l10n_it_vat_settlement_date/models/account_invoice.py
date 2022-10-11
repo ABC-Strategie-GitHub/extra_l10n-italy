@@ -17,9 +17,9 @@ class AccountInvoice(models.Model):
             for move in invoice.id:
                 move.write({"date_vat_settlement": invoice.date_vat_settlement})
 
-    @api.onchange("date_vat_settlement")
-    def _onchange_date_vat_settlement(self):
-        self.write({"date_vat_settlement": self.date_vat_settlement})
+#    @api.onchange("date_vat_settlement")
+#    def _onchange_date_vat_settlement(self):
+#        self.write({"date_vat_settlement": self.date_vat_settlement})
 
     def rc_inv_vals(self, partner, rc_type, lines, currency):
         ret = super().rc_inv_vals(partner, rc_type, lines, currency)
