@@ -5,3 +5,4 @@ Repository contenente i moduli relativi alla Localizzazione Italiana che ancora 
 # REPOSITORY INSTALLATO:
 keidea (Odoo.sh) <br/>
 puleo (Odoo.sh) <br/>
+chiraema (Odoo.sh) <br/>
