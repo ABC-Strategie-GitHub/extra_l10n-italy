@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_wizard_efattura_user,access_wizard_efattura_user,model_wizard_efattura,e_fattura_user,1,0,0,0
+access_wizard_efattura_manager,access_wizard_efattura_manager,model_wizard_efattura,e_fattura_manager,1,1,1,1
+efattura_history_user,efattura_history_user,model_efattura_history,e_fattura_user,1,1,1,1
+efattura_history_manager,efattura_history_manager,model_efattura_history,e_fattura_manager,1,1,1,1

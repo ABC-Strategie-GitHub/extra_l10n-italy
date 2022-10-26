@@ -1,0 +1,31 @@
+<odoo>
+    <data noupdate="1">
+        <record forcecreate="True" id="ir_cron_get_incoming_efatture"
+                model="ir.cron">
+            <field name="name">E-Fattura - Get Incoming Invoice XML</field>
+            <field eval="True" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">12</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field ref="model_fatturapa_attachment_in" name="model_id"/>
+            <field name="state">code</field>
+	    <field name="code">model.cron_receiveEfatturaAdE()</field>
+        </record>
+        
+        <record forcecreate="True" id="ir_cron_check_new_status" model="ir.cron">
+            <field name="name">E-Fattura - Check New Status</field>
+            <field eval="True" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">12</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field ref="model_account_move" name="model_id"/>
+            <field name="state">code</field>
+	        <field name="code">model.cron_getAllStatusAdE()</field>
+        </record>
+        
+    </data>
+</odoo>

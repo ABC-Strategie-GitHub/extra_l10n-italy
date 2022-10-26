@@ -1,0 +1,55 @@
+<odoo>
+    <data>
+        <record id="view_account_config_settings" model="ir.ui.view">
+        <field name="name">efatturazione.view_account_config_settings</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_it_fatturapa_in.view_account_config_settings_ftpa_in"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//div[@id='analytic']" position="after">
+                <h2>E-Invoicing Settings</h2>
+                <div class="row mt16 o_settings_container" id="efatturazione_settings">
+                    
+                    <div class="col-12 col-lg-12 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">E-Fatturazione</span>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                            <div class="text-muted">
+                               Url, Username and Password to connect Odoo to the E-Invoicing system
+                            </div>
+                            <div class="content-group">
+                                <div class="row">
+                                    
+                                    <label for="apiKey_efattura" class="col-lg-6 o_light_label"/>
+                                    <field name="apiKey_efattura" class="col-lg-6" password="True"/>  
+                            
+                                </div>
+                                <div class="row">
+                                    
+                                    <label for="password_efattura" class="col-lg-6 o_light_label"/>
+                                    <field name="password_efattura" class="col-lg-6" password="True"/>  
+                                                                
+                                </div>
+                                <div class="row">
+                                    
+                                    <label for="urlLogin" class="col-lg-6 o_light_label"/>
+                                    <field name="urlLogin" class="col-lg-6"/>  
+                            
+                                </div>
+                                <div class="row">
+                                    
+                                     <label for="urlBase" class="col-lg-6 o_light_label"/>
+                                    <field name="urlBase" class="col-lg-6"/>  
+                                                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            
+        </field>
+    </record>
+    </data>
+</odoo>
