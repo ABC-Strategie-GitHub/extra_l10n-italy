@@ -23,12 +23,11 @@ class WizardEFattura(models.TransientModel):
                 errors.append((
                     invoice.partner_id.name,
                     _('Partner is not electronic invoice subjected')))
-                
-            # TODO?    
-            #if not invoice.journal_id.e_invoice:
-            #    errors.append((invoice.name, _('Selected journal is '
-            #                                     'incorrect.'
-            #                                     '\nIs not E-invoice')))
+                 
+            if not invoice.journal_id.e_fattura:
+                errors.append((invoice.name, _('Selected journal is '
+                                               'incorrect.'
+                                               '\nIs not E-invoice')))
             elif invoice.state in ('draft', 'cancel'):
                 errors.append((invoice.name, _('is not validate')))
             elif invoice.e_state in ('sent', 'done'):

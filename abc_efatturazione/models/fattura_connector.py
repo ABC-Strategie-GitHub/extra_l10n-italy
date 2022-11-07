@@ -623,3 +623,100 @@ class EinvoiceHistory(models.Model):
         ('positive', 'OK'),
         ('error', 'ERROR')
     ])
+
+    
+class AccountJournal(models.Model):
+
+    _inherit = "account.journal"
+
+    e_fattura = fields.Boolean(
+        string='Electronic Invoice',
+        help="Check this box to determine that each entry of this journal\
+            will be managed with Italian Electronical Invoice.", default=False)
+
+    def get_journal_dashboard_datas(self):
+        """
+        Inherit for add in dashboard of account number of einvoice to sent
+        and einvoice in error
+        """
+        res = super(AccountJournal, self).get_journal_dashboard_datas()
+        number_efatture_error = number_efatture_draft = 0
+        if self.type == 'sale':
+            (query, query_args) = self._get_sent_error_ebills_query()
+            self.env.cr.execute(query, query_args)
+            query_efatture_error = self.env.cr.dictfetchall()
+
+            (query, query_args) = self._get_draft_ebills_query()
+            self.env.cr.execute(query, query_args)
+            query_efatture_draft = self.env.cr.dictfetchall()
+
+            curr_cache = {}
+            (number_efatture_error) = self._count_results_efatture_error(query_efatture_error, curr_cache=curr_cache)
+            (number_efatture_draft) = self._count_results_efatture_draft(query_efatture_draft, curr_cache=curr_cache)
+ 
+            res.update({
+                'number_efatture_error': number_efatture_error,
+                'number_efatture_draft': number_efatture_draft,
+                })
+        return res
+
+    def _get_sent_error_ebills_query(self):
+        """
+        Returns a tuple containing as its first element the SQL query used to
+        gather the ebills in error state, and the arguments
+        dictionary to use to run it as its second.
+        """
+        return ('''
+            SELECT
+                move.move_type,
+                move.invoice_date,
+                move.company_id
+            FROM account_move move
+            WHERE move.journal_id = %(journal_id)s
+            AND move.e_state = 'error'
+            AND move.move_type IN ('out_invoice', 'out_refund');
+        ''', {'journal_id': self.id})
+
+    def _count_results_efatture_error(self, results_dict, curr_cache=None):
+        """ 
+        Loops on a query result to count the total number of e-invoices
+        in error state of sent
+        """
+        rslt_count = 0
+        curr_cache = {} if curr_cache is None else curr_cache
+        for result in results_dict:
+            company = self.env['res.company'].browse(result.get('company_id')) or self.env.company
+            rslt_count += 1
+            date = result.get('invoice_date') or fields.Date.context_today(self)
+        return (rslt_count)
+
+    def _get_draft_ebills_query(self):
+        """
+        Returns a tuple containing as its first element the SQL query used to
+        gather the e-bills in draft state, and the arguments
+        dictionary to use to run it as its second.
+        """
+        return ('''
+            SELECT
+                move.move_type,
+                move.invoice_date,
+                move.company_id
+            FROM account_move move
+            WHERE move.journal_id = %(journal_id)s
+            AND move.e_state = 'draft'
+            AND move.state = 'posted'
+            AND move.move_type IN ('out_invoice', 'out_refund');
+        ''', {'journal_id': self.id})
+
+    def _count_results_efatture_draft(self, results_dict, curr_cache=None):
+        """ 
+        Loops on a query result to count the total number of invoices
+        confirmed to send which electronic invoice
+        """
+        rslt_count = 0
+        curr_cache = {} if curr_cache is None else curr_cache
+        for result in results_dict:
+            company = self.env['res.company'].browse(result.get('company_id')) or self.env.company
+            rslt_count += 1
+            date = result.get('invoice_date') or fields.Date.context_today(self)
+        return (rslt_count)

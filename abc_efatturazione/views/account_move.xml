@@ -46,7 +46,6 @@
       
       
       
-      
     <record id="efatturazione_send_einvoice_form_button" model="ir.ui.view">
         <field name="name">efatturazione.send.einvoice.form.button</field>
         <field name="model">account.move</field>
@@ -102,7 +101,66 @@
             
         </field>
     </record>
+      
+      
+    <record id="efatturazione_efattura_state_tree_search" model="ir.ui.view">
+        <field name="name">efatturazione.efattura.state.tree.search</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//separator[1]" position="after">
+                <filter name="e_draft" string="EFatt Draft" domain="[('e_state', '=', 'draft')]"/>
+                <filter name="e_sending" string="EFatt Sending" domain="[('e_state', '=', 'sending')]"/>
+                <filter name="e_sent" string="EFatt Sent" domain="[('e_state', '=', 'sent')]"/>
+                <filter name="e_delivered" string="EFatt Delivered" domain="[('e_state', '=', 'delivered')]"/>
+                <filter name="e_accepted" string="EFatt Accepted" domain="[('e_state', '=', 'accepted')]"/>
+                <filter name="e_rejected" string="EFatt Rejected" domain="[('e_state', '=', 'rejected')]"/>
+                <filter name="e_error" string="EFatt Error" domain="[('e_state', '=', 'error')]"/>
+                <separator/>
+            </xpath>
+            <xpath expr="//group[1]" position="inside">
+                <filter name="e_state" string="E-Fattura State" context="{'group_by': 'e_state'}"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
     
+    <record id="efatturazione_dashboard_account_kanban" model="ir.ui.view">
+        <field name="name">efatturazione.dashboard.account.kanban</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@t-name='JournalBodySalePurchase']/div[2]" position="inside">
+                <div class="row" t-if="dashboard.number_efatture_error">
+                    <div class="col overflow-hidden text-left">
+                        <a type="object" name="open_action" context="{'search_default_e_error': '1'}">
+                            <span style="color: red" t-if="journal_type == 'sale'" title="E-fatture in error"><t t-esc="dashboard.number_efatture_error"/> E-fatture in error</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="row" t-if="dashboard.number_efatture_draft">
+                    <div class="col overflow-hidden text-left">
+                        <a type="object" name="open_action" context="{'search_default_posted': '1', 'search_default_e_draft': '1'}">
+                            <span style="color: green" t-if="journal_type == 'sale'" title="Invoice to Sent"><t t-esc="dashboard.number_efatture_draft"/> Invoice to Sent</span>
+                        </a>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+      
+      
+    <record id="efatturazione_journal_efattura_check_form" model="ir.ui.view">
+        <field name="name">efatturazione.journal.efattura.check.form</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="e_fattura"/>
+            </field>
+        </field>
+    </record>
+      
       
     <record id="fatturapa_attachment_in_form_abc" model="ir.ui.view">
         <field name="name">fatturapa.attachment.in.form.abc</field>

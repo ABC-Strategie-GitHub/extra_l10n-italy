@@ -122,6 +122,7 @@ class AccountMove(models.Model):
             
             #Effettuo il login per ottenere un nuovo token
             token, username = self._loginEfattura()
+            vat = self.env.company.vat[2:]
             
             jsonPayload = { "dataFile": xml_to_send,
                             "credential": "",
@@ -196,7 +197,7 @@ class AccountMove(models.Model):
         #Strutturo ed eseguo la chiamata
         vat = self.env.company.vat[2:]
         time= (datetime.now() - timedelta(hours=24)).isoformat('#')
-        param = "username={username}&countrySender=IT&vatcodeSender={vat}&startDate={time}".format(username = username, vat = vat, time=time)
+        param = "username={username}&countrySender=IT&vatcodeSender={vat}".format(username = username.upper(), vat = vat)
         url = "{url}/services/invoice/out/findByUsername?{param}".format( url= self.sudo().env['res.config.settings'].get_values()['urlBase'], param = param) 
         res = session.get(url, headers={'Authorization': 'Bearer '+str(token)})
         resJson = res.json()
@@ -267,7 +268,7 @@ class AccountMove(models.Model):
 
                             self.env['efattura.history'].create({'name': record.id, 
                                                                  'date': str(date), 
-                                                                 'note': 'testone', 
+                                                                 'note': 'error', 
                                                                  'status_code': resJson['errorCode'], 
                                                                  'status_desc': resJson['errorDescription'], 
                                                                  'type':'error',
@@ -289,7 +290,7 @@ class AccountMove(models.Model):
                                 #Creo un record di history con data, status_code e descrizione
                                 self.env['efattura.history'].create({'name': record.id, 
                                                                      'date': str(date), 
-                                                                     'note': 'test', 
+                                                                     'note': 'ok', 
                                                                      'status_code': state, 
                                                                      'status_desc': stateDesc, 
                                                                      'type':'positive'
@@ -333,7 +334,7 @@ class AccountMove(models.Model):
                 
                 self.env['efattura.history'].create({'name': record.id, 
                                                      'date': str(date), 
-                                                     'note': 'testone', 
+                                                     'note': 'error', 
                                                      'status_code': resJson['errorCode'], 
                                                      'status_desc': resJson['errorDescription'],
                                                      'type':'error',
@@ -353,7 +354,7 @@ class AccountMove(models.Model):
                 if(state_to_check != record.e_state):
                     self.env['efattura.history'].create({'name': record.id, 
                                                          'date': str(date), 
-                                                         'note': 'test', 
+                                                         'note': 'ok', 
                                                          'status_code': state, 
                                                          'status_desc': stateDesc, 
                                                          'type':'positive'
@@ -420,7 +421,7 @@ class FatturaPAAttachmentIn(models.Model):
         #Strutturo ed eseguo la chiamata
         vat = self.env.company.vat[2:]
         time= (datetime.now() - timedelta(hours=24)).isoformat('#')
-        param = "username={username}&countryReceiver=IT&vatcodeReceiver={vat}&startDate={time}".format(username = username, vat = vat, time = time)
+        param = "username={username}&countryReceiver=IT&vatcodeReceiver={vat}".format(username = username.upper(), vat = vat)
         url = "{url}/services/invoice/in/findByUsername?{param}".format( url= self.sudo().env['res.config.settings'].get_values()['urlBase'], param = param) 
         res = session.get(url, headers={'Authorization': 'Bearer '+str(token)})
         resJson = res.json()
@@ -622,3 +623,100 @@ class EinvoiceHistory(models.Model):
         ('positive', 'OK'),
         ('error', 'ERROR')
     ])
+
+    
+class AccountJournal(models.Model):
+
+    _inherit = "account.journal"
+
+    e_fattura = fields.Boolean(
+        string='Electronic Invoice',
+        help="Check this box to determine that each entry of this journal\
+            will be managed with Italian Electronical Invoice.", default=False)
+
+    def get_journal_dashboard_datas(self):
+        """
+        Inherit for add in dashboard of account number of einvoice to sent
+        and einvoice in error
+        """
+        res = super(AccountJournal, self).get_journal_dashboard_datas()
+        number_efatture_error = number_efatture_draft = 0
+        if self.type == 'sale':
+            (query, query_args) = self._get_sent_error_ebills_query()
+            self.env.cr.execute(query, query_args)
+            query_efatture_error = self.env.cr.dictfetchall()
+
+            (query, query_args) = self._get_draft_ebills_query()
+            self.env.cr.execute(query, query_args)
+            query_efatture_draft = self.env.cr.dictfetchall()
+
+            curr_cache = {}
+            (number_efatture_error) = self._count_results_efatture_error(query_efatture_error, curr_cache=curr_cache)
+            (number_efatture_draft) = self._count_results_efatture_draft(query_efatture_draft, curr_cache=curr_cache)
+ 
+            res.update({
+                'number_efatture_error': number_efatture_error,
+                'number_efatture_draft': number_efatture_draft,
+                })
+        return res
+
+    def _get_sent_error_ebills_query(self):
+        """
+        Returns a tuple containing as its first element the SQL query used to
+        gather the ebills in error state, and the arguments
+        dictionary to use to run it as its second.
+        """
+        return ('''
+            SELECT
+                move.move_type,
+                move.invoice_date,
+                move.company_id
+            FROM account_move move
+            WHERE move.journal_id = %(journal_id)s
+            AND move.e_state = 'error'
+            AND move.move_type IN ('out_invoice', 'out_refund');
+        ''', {'journal_id': self.id})
+
+    def _count_results_efatture_error(self, results_dict, curr_cache=None):
+        """ 
+        Loops on a query result to count the total number of e-invoices
+        in error state of sent
+        """
+        rslt_count = 0
+        curr_cache = {} if curr_cache is None else curr_cache
+        for result in results_dict:
+            company = self.env['res.company'].browse(result.get('company_id')) or self.env.company
+            rslt_count += 1
+            date = result.get('invoice_date') or fields.Date.context_today(self)
+        return (rslt_count)
+
+    def _get_draft_ebills_query(self):
+        """
+        Returns a tuple containing as its first element the SQL query used to
+        gather the e-bills in draft state, and the arguments
+        dictionary to use to run it as its second.
+        """
+        return ('''
+            SELECT
+                move.move_type,
+                move.invoice_date,
+                move.company_id
+            FROM account_move move
+            WHERE move.journal_id = %(journal_id)s
+            AND move.e_state = 'draft'
+            AND move.state = 'posted'
+            AND move.move_type IN ('out_invoice', 'out_refund');
+        ''', {'journal_id': self.id})
+
+    def _count_results_efatture_draft(self, results_dict, curr_cache=None):
+        """ 
+        Loops on a query result to count the total number of invoices
+        confirmed to send which electronic invoice
+        """
+        rslt_count = 0
+        curr_cache = {} if curr_cache is None else curr_cache
+        for result in results_dict:
+            company = self.env['res.company'].browse(result.get('company_id')) or self.env.company
+            rslt_count += 1
+            date = result.get('invoice_date') or fields.Date.context_today(self)
+        return (rslt_count)
