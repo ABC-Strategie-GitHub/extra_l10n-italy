@@ -73,6 +73,9 @@
                     string="Delivered" attrs="{'invisible': [('e_state', '!=', 'delivered')]}" style="color: green"/>
                 
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
+                    string="Not Delivered" attrs="{'invisible': [('e_state', '!=', 'not_delivered')]}" style="color: orange"/>
+                
+                <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
                     string="Confirmed ✓" attrs="{'invisible': [('e_state', '!=', 'accepted')]}" style="color: green"/>
                 
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
@@ -96,7 +99,8 @@
             
             <xpath expr="//field[@name='state']" position="after">
                 <field name="e_state" widget="badge" decoration-success="e_state == 'sent' or e_state =='delivered' or e_state=='accepted'"
-                decoration-danger="e_state == 'error' or e_state == 'rejected'" decoration-info="e_state == 'draft' or e_state == 'sending'"/>
+                decoration-danger="e_state == 'error' or e_state == 'rejected'" decoration-info="e_state == 'draft' or e_state == 'sending'" 
+                decoration-warning="e_state == 'not_delivered'"/>
             </xpath>
             
         </field>
@@ -115,6 +119,7 @@
                 <filter name="e_delivered" string="EFatt Delivered" domain="[('e_state', '=', 'delivered')]"/>
                 <filter name="e_accepted" string="EFatt Accepted" domain="[('e_state', '=', 'accepted')]"/>
                 <filter name="e_rejected" string="EFatt Rejected" domain="[('e_state', '=', 'rejected')]"/>
+                <filter name="e_not_delivered" string="EFatt Not Delivered" domain="[('e_state', '=', 'not_delivered')]"/>
                 <filter name="e_error" string="EFatt Error" domain="[('e_state', '=', 'error')]"/>
                 <separator/>
             </xpath>
