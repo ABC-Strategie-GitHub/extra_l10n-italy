@@ -8,7 +8,7 @@
             
             <xpath expr="//field[@name='fatturapa_attachment_out_id']/../.." position="after">
                 <group colspan="4">
-                    <field name="e_state" readonly="1"/>
+                    <field name="e_state" groups="base.group_no_one, base.user_admin" />
                     <field name="sdi_file_name" readonly="1"/>
                 </group>
                 <group colspan="4">
@@ -53,7 +53,7 @@
         <field name="arch" type="xml">
             
             <xpath expr="//header/button[1]" position="before">
-                <button name="%(abc_efatturazione.action_invia_efattura)d" type="action" class="btn-primary" string="Send E-invoice" attrs="{'invisible': ['|', ('e_state', 'not in', ('draft', 'error')), ('state', '!=', 'posted')]}" groups="abc_efatturazione.e_fattura_manager"/>
+                <button name="%(abc_efatturazione.action_invia_efattura)d" type="action" class="btn-primary" string="Send E-invoice" attrs="{'invisible': ['|', ('e_state', 'not in', ('draft')), ('state', '!=', 'posted')]}" groups="abc_efatturazione.e_fattura_manager"/>
                 
             </xpath>
 
@@ -138,7 +138,7 @@
             <xpath expr="//t[@t-name='JournalBodySalePurchase']/div[2]" position="inside">
                 <div class="row" t-if="dashboard.number_efatture_error">
                     <div class="col overflow-hidden text-left">
-                        <a type="object" name="open_action" context="{'search_default_e_error': '1'}">
+                        <a type="object" name="open_action" context="{'search_default_e_error': '1', 'search_default_posted': '1'}">
                             <span style="color: red" t-if="journal_type == 'sale'" title="E-fatture in error"><t t-esc="dashboard.number_efatture_error"/> E-fatture in error</span>
                         </a>
                     </div>

@@ -8,8 +8,8 @@ import json
 import logging
 from odoo.exceptions import UserError, Warning
 from datetime import datetime, timedelta
-import time
-import base64
+import time, base64, zipfile, io
+from bs4 import BeautifulSoup
 
 _logger = logging.getLogger(__name__)
 
@@ -354,7 +354,35 @@ class AccountMove(models.Model):
                                 #creare un nuovo record di history
                                 state_to_check = self._decodeStatus(state)
                                 if(state_to_check != record.e_state):
+                                    
+                                    if(state_to_check=="error"):
 
+                                        param = "filename={file}".format(file=id)
+                                        url = "{url}/services/invoice/out/getZipByFilename?{param}".format( url= self.sudo().env['res.config.settings'].get_values()['urlBase'], param = param ) 
+
+                                        res = session.get(url, headers={'Authorization': 'Bearer '+token})
+                                        if(res.status_code != 200):
+
+                                            #Se c'e' un errore scrivo nel logger
+                                            _logger.info("Return status Invoice get Status - ERROR CODE {c}".format(
+                                                c=res.status_code))
+                                            continue
+
+                                        else:
+
+                                            resJson = zipfile.ZipFile(io.BytesIO(res.content), 'r')
+                                            date_dummy = (datetime.now() - timedelta(days=365))
+                                            for file in resJson.namelist():
+
+                                                if file[-3:]=="xml":
+                                                    soup = BeautifulSoup(resJson.read(file), 'xml')
+                                                    dateRic = soup.find('DataOraRicezione').string[:-10]
+                                                    dateRic = datetime.strptime(dateRic, '%Y-%m-%dT%H:%M:%S')
+
+                                                    if(dateRic > date_dummy):
+                                                        stateDesc = '[' + soup.find('Codice').string +'] '+ soup.find('Descrizione').string
+                                                        date_dummy = dateRic
+                                    
                                     #Creo un record di history con data, status_code e descrizione
                                     self.env['efattura.history'].create({'name': record.id, 
                                                                          'date': str(date), 
@@ -365,7 +393,8 @@ class AccountMove(models.Model):
                                                                          })
                                     #Aggiorno lo stato del record
                                     record.e_state = state_to_check
-
+                        self.env.cr.commit()
+                        _logger.info("Status Invoice committed - {f}".format(f=id))
         #C'e' un errore nella chiamata
         else:
             #Se c'e' un errore scrivo nel logger
@@ -430,6 +459,36 @@ class AccountMove(models.Model):
                     #creare un nuovo record di history
                     state_to_check = self._decodeStatus(state)
                     if(state_to_check != record.e_state):
+                        
+                        if(state_to_check=="error"):
+                        
+                            param = "filename={file}".format(file=xml_to_search)
+                            url = "{url}/services/invoice/out/getZipByFilename?{param}".format( url= self.sudo().env['res.config.settings'].get_values()['urlBase'], param = param ) 
+
+                            res = session.get(url, headers={'Authorization': 'Bearer '+token})
+                            if(res.status_code != 200):
+
+                                #Se c'e' un errore scrivo nel logger
+                                _logger.info("Return status Invoice get Status - ERROR CODE {c}".format(
+                                    c=res.status_code))
+
+                            else:
+
+                                resJson = zipfile.ZipFile(io.BytesIO(res.content), 'r')
+                                date_dummy = (datetime.now() - timedelta(days=365))
+                                for file in resJson.namelist():
+
+                                    if file[-3:]=="xml":
+                                        soup = BeautifulSoup(resJson.read(file), 'xml')
+                                        dateRic = soup.find('DataOraRicezione').string[:-10]
+                                        dateRic = datetime.strptime(dateRic, '%Y-%m-%dT%H:%M:%S')
+
+                                        if(dateRic > date_dummy):
+                                            stateDesc = '[' + soup.find('Codice').string +'] '+ soup.find('Descrizione').string
+                                            date_dummy = dateRic
+                        
+                        
+                        
                         self.env['efattura.history'].create({'name': record.id, 
                                                              'date': str(date), 
                                                              'note': 'ok', 
@@ -635,6 +694,7 @@ class FatturaPAAttachmentIn(models.Model):
                                                             'id_fatturazione_abc': id,
                                                           })
 
+                                self.env.cr.commit()
                                 #Scrivo nel logger che l'operazione è andata a buon fine
                                 _logger.info("Import Supplier Invoice - INVOICE {c} - {f}".format(
                                     c=id, f=resJson['filename']))
