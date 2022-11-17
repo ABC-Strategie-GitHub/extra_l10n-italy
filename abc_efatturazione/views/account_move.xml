@@ -53,7 +53,7 @@
         <field name="arch" type="xml">
             
             <xpath expr="//header/button[1]" position="before">
-                <button name="%(abc_efatturazione.action_invia_efattura)d" type="action" class="btn-primary" string="Send E-invoice" attrs="{'invisible': ['|', ('e_state', 'not in', ('draft')), ('state', '!=', 'posted')]}" groups="abc_efatturazione.e_fattura_manager"/>
+                <button name="%(abc_efatturazione.action_invia_efattura)d" type="action" class="btn-primary" string="Send E-invoice" attrs="{'invisible': ['|', ('e_state', 'not in', ('draft', 'error')), ('state', '!=', 'posted')]}" groups="abc_efatturazione.e_fattura_manager"/>
                 
             </xpath>
 

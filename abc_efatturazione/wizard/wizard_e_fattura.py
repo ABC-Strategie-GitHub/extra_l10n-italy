@@ -30,7 +30,7 @@ class WizardEFattura(models.TransientModel):
                                                '\nIs not E-invoice')))
             elif invoice.state in ('draft', 'cancel'):
                 errors.append((invoice.name, _('is not validate')))
-            elif invoice.e_state in ('sent', 'done', 'error'):
+            elif invoice.e_state in ('sent', 'done'):
                 errors.append((invoice.name, _('has already been processed')))
             elif not invoice.fatturapa_attachment_out_id:
                 errors.append((invoice.name, _('XML is not ready')))

@@ -211,7 +211,7 @@ class AccountMove(models.Model):
                                             )
                     
     #Funzione per cercare le fatture in uscita in base alla partita iva nel sistema di fatturazione [FIX PER CICLARE TUTTE LE FATTURE DELLE ULTIME 2 Settimane]
-    def _searchEfattura(self, username, token):
+    def _searchEfattura(self, username, token, size, page):
         session = requests.session()
         session.mount('https://', TLSAdapter())
         ids= []
@@ -220,8 +220,9 @@ class AccountMove(models.Model):
         vat = self.env.company.vat[2:]
         time= (datetime.now() - timedelta(hours=336)).isoformat('#')
         #time2= (datetime.now() - timedelta(hours=40)).isoformat('#')
-        param = "username={username}&countrySender=IT&vatcodeSender={vat}&size=100&startDate={time}".format(username = username.upper(), vat = vat, time=time)
-        url = "{url}/services/invoice/out/findByUsername?{param}".format( url= self.sudo().env['res.config.settings'].get_values()['urlBase'], param = param) 
+        
+        param = "username={username}&countrySender=IT&vatcodeSender={vat}&size={size}&page={page}&startDate={time}".format(username = username.upper(), vat = vat, size=size, page=page ,time=time)
+        url = "{url}/services/invoice/out/findByUsername?{param}".format( url= self.sudo().env['res.config.settings'].get_values()['urlBase'], param = param, time = time) 
         res = session.get(url, headers={'Authorization': 'Bearer '+str(token)})
         if(res.status_code != 200):
 
@@ -230,56 +231,32 @@ class AccountMove(models.Model):
 
         else:
             resJson = res.json()
-            last = abs(resJson['totalElements'] % 100 )
+
+            #Verifico che l'errorCode tornato dalla chiamata sia diverso da 0000, altrimenti la chiamata va avanti
             if(resJson['errorCode'] != '0000'):
-                    error = str(resJson['errorDescription'])
+                error = str(resJson['errorDescription'])
+
+                #Ritorno -1 e la descrizione dell'errore
+                return -1, error
+
+            #Se non c'è un errore di comunicazione continuo il flusso
+            else:       
+                #Aggiungo a ids tutti i filename restituiti
+                for content in resJson['content']:
+                    ids.append(content['filename'])
+
+                #Se non sono stati aggiunti filename a ids
+                if(len(ids)==0):
+                    error = "No invoice for this account"
 
                     #Ritorno -1 e la descrizione dell'errore
                     return -1, error
-
-                #Se non c'è un errore di comunicazione continuo il flusso
-            else:       
-                for page in range(1,resJson['totalPages']+1):
-                    size=100
-                    if(page==resJson['totalPages']):
-                        size=last
-
-                    param = "username={username}&countrySender=IT&vatcodeSender={vat}&size={size}&page={page}&startDate={time}".format(username = username.upper(), vat = vat, size=size, page=page ,time=time)
-                    url = "{url}/services/invoice/out/findByUsername?{param}".format( url= self.sudo().env['res.config.settings'].get_values()['urlBase'], param = param, time = time) 
-                    res = session.get(url, headers={'Authorization': 'Bearer '+str(token)})
-                    if(res.status_code != 200):
-
-                        #Se c'e' un errore scrivo nel logger
-                        return -1, res.status_code
-
-                    else:
-                        resJson = res.json()
-
-                        #Verifico che l'errorCode tornato dalla chiamata sia diverso da 0000, altrimenti la chiamata va avanti
-                        if(resJson['errorCode'] != '0000'):
-                            error = str(resJson['errorDescription'])
-
-                            #Ritorno -1 e la descrizione dell'errore
-                            return -1, error
-
-                        #Se non c'è un errore di comunicazione continuo il flusso
-                        else:       
-                            #Aggiungo a ids tutti i filename restituiti
-                            for content in resJson['content']:
-                                ids.append(content['filename'])
-
-                            #Se non sono stati aggiunti filename a ids
-                            if(len(ids)==0):
-                                error = "No invoice for this account"
-
-                                #Ritorno -1 e la descrizione dell'errore
-                                return -1, error
 
                 #Ritorno la lista ids contenente i filename e "OK"
                 return ids, "OK"
         
     #Funzione che consente l'aggiornamento massivo dello stato delle fatture dal sistema di fatturazione 
-    def _getAllStatusAdE(self):
+    def _getAllStatusAdE(self, size, page):
 
         session = requests.session()
         session.mount('https://', TLSAdapter())
@@ -293,7 +270,7 @@ class AccountMove(models.Model):
         vat = self.env.company.vat[2:]
 
         #Cerco le fatture nel sistema di fatturazione, mi verranno restituiti una lista di filename e lo status. Se lo status e' OK non c'e' errore.
-        ids, status = self._searchEfattura(username, token)
+        ids, status = self._searchEfattura(username, token, size, page)
 
         
         #Verifico che non ci sia errore nella chiamata di ricerca
@@ -302,8 +279,8 @@ class AccountMove(models.Model):
             
             for id in ids:
                 
-                #Sleep di 6 secondi perché il massimo di fatture che si possono richiedere in un minuto è 12
-                time.sleep(6)
+                #Sleep di 7 secondi perché il massimo di fatture che si possono richiedere in un minuto è 12
+                time.sleep(7)
                 #Verifico che esista almeno un record con sdi_file_name corrispondente 
                 if(self.search([['sdi_file_name','=',id]])):
                     
@@ -513,8 +490,8 @@ class AccountMove(models.Model):
             }
         
     #Funzione per la cron
-    def cron_getAllStatusAdE(self):
-        self._getAllStatusAdE()
+    def cron_getAllStatusAdE(self, size, page):
+        self._getAllStatusAdE(size, page)
             
 
             
@@ -554,16 +531,16 @@ class FatturaPAAttachmentIn(models.Model):
     
     
     #Funzione per cercare le fatture in entrata in base alla partita iva nel sistema di fatturazione
-    def _searchEfattura(self, username, token):
+    def _searchEfattura(self, username, token, size, page):
         session = requests.session()
         session.mount('https://', TLSAdapter())
         ids= []
     
         #Strutturo ed eseguo la chiamata
         vat = self.env.company.vat[2:]
-        time= (datetime.now() - timedelta(hours=336)).isoformat('#')
+        time= (datetime.now() - timedelta(days=30)).isoformat('#')
         #time2= (datetime.now() - timedelta(hours=40)).isoformat('#')
-        param = "username={username}&countryReceiver=IT&vatcodeReceiver={vat}&size=100&startDate={time}".format(username = username.upper(), vat = vat, time=time)
+        param = "username={username}&countryReceiver=IT&vatcodeReceiver={vat}&size={size}&page={page}&startDate={time}".format(username = username.upper(), vat = vat, size=size, page=page ,time=time)
         url = "{url}/services/invoice/in/findByUsername?{param}".format( url= self.sudo().env['res.config.settings'].get_values()['urlBase'], param = param) 
         res = session.get(url, headers={'Authorization': 'Bearer '+str(token)})
         if(res.status_code != 200):
@@ -575,51 +552,23 @@ class FatturaPAAttachmentIn(models.Model):
         else:
             resJson = res.json()
 
-            last = abs(resJson['totalElements'] % 100 )
+            #Aggiungo a ids gli id restituiti
+            for content in resJson['content']:
+                ids.append(content['id'])
 
-            #Verifico che l'errorCode tornato dalla chiamata sia diverso da 0000, altrimenti la chiamata va avanti
-            if(resJson['errorCode'] != '0000'):
-                error = str(resJson['errorDescription'])
+            #Se non sono stati aggiunti id a ids
+            if(len(ids)==0):
+                error = "No invoice for this account"
 
                 #Ritorno -1 e la descrizione dell'errore
                 return -1, error
-
-            #Se non c'è un errore di comunicazione continuo il flusso
-            else:      
-                for page in range(1,resJson['totalPages']+1):
-
-                    size=100
-                    if(page==resJson['totalPages']):
-                        size=last
-                    param = "username={username}&countryReceiver=IT&vatcodeReceiver={vat}&size={size}&page={page}&startDate={time}".format(username = username.upper(), vat = vat, size=size, page=page ,time=time)
-                    url = "{url}/services/invoice/in/findByUsername?{param}".format( url= self.sudo().env['res.config.settings'].get_values()['urlBase'], param = param) 
-                    res = session.get(url, headers={'Authorization': 'Bearer '+str(token)})
-                    if(res.status_code != 200):
-
-                        #Se c'e' un errore scrivo nel logger
-                        _logger.info("Return status search - ERROR CODE {c}".format(
-                            c=res.status_code))
-
-                    else:
-                        resJson = res.json()
-
-                        #Aggiungo a ids gli id restituiti
-                        for content in resJson['content']:
-                            ids.append(content['id'])
-
-                        #Se non sono stati aggiunti id a ids
-                        if(len(ids)==0):
-                            error = "No invoice for this account"
-
-                            #Ritorno -1 e la descrizione dell'errore
-                            return -1, error
-
-                #Ritorno la lista ids contenente gli id e "OK"
-                return ids, "OK"
+            
+            #Ritorno la lista ids contenente gli id e "OK"
+            return ids, "OK"
     
     
     #Funzione che consente la ricezione massiva delle fatture dal sistema di fatturazione 
-    def _receiveEfatturaAdE(self):
+    def _receiveEfatturaAdE(self, size, page):
         session = requests.session()
         session.mount('https://', TLSAdapter())
 
@@ -638,15 +587,15 @@ class FatturaPAAttachmentIn(models.Model):
         payload = json.dumps(jsonPayload, ensure_ascii=False)
 
         #Cerco le fatture nel sistema di fatturazione, mi verranno restituiti una lista di id e lo status. Se lo status e' OK non c'e' errore.
-        ids, status = self._searchEfattura(username, token)
+        ids, status = self._searchEfattura(username, token, size, page)
         
         #Verifico che non ci sia errore nella chiamata di ricerca
         if(status == "OK"):
             
             for id in ids:
                 
-                #Sleep di 6 secondi perché il massimo di fatture che si possono richiedere in un minuto è 12
-                time.sleep(6)
+                #Sleep di 7 secondi perché il massimo di fatture che si possono richiedere in un minuto è 12
+                time.sleep(7)
                 
                 #Strutturo ed eseguo la chiamata
                 param = "{file}".format(file = id)
@@ -794,8 +743,8 @@ class FatturaPAAttachmentIn(models.Model):
                         pass
         
     #Funzione per la cron
-    def cron_receiveEfatturaAdE(self):
-        self._receiveEfatturaAdE()
+    def cron_receiveEfatturaAdE(self, size, page):
+        self._receiveEfatturaAdE(size, page)
     
     
     
