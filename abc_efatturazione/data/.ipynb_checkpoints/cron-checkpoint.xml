@@ -1,5 +1,5 @@
 <odoo>
-    <data>
+    <data noupdate="1">
         <record forcecreate="True" id="ir_cron_get_incoming_efatture_1"
                 model="ir.cron">
             <field name="name">E-Fattura - Get Incoming Invoice XML 1</field>
