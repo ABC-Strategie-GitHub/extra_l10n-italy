@@ -1,7 +1,8 @@
 # extra_l10n-italy
-Repository contenente i moduli relativi alla Localizzazione Italiana che ancora non sono stati migrati alla versione corrente oppure non ancora ufficiali.
+Repository contenente i moduli relativi alla Localizzazione Italiana che ancora non sono stati migrati alla versione corrente oppure non ancora ufficiali (PR).
 <br/>
 <br/>
+
 # REPOSITORY INSTALLATO:
 keidea (Odoo.sh) <br/>
 puleo (Odoo.sh) <br/>
