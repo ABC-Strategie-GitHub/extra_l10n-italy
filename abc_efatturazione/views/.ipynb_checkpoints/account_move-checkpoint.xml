@@ -42,8 +42,40 @@
             </xpath>
             
         </field>
+    </record> 
+      
+    <record id="view_fatturapa_out_attachment_form_state" model="ir.ui.view">
+        <field name="name">fatturapa.attachment.out.form.state</field>
+        <field name="model">fatturapa.attachment.out</field>
+        <field name="inherit_id" ref="l10n_it_fatturapa_out.view_fatturapa_out_attachment_form"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="attrs">{'invisible': 1}</attribute>
+                
+            </xpath>
+            
+            <xpath expr="//header" position="inside">
+                <field name="e_state" widget="statusbar" statusbar_visible="draft,sending,sent,delivered,accepted"/>
+            </xpath>
+            
+        </field>
+        
     </record>  
       
+        <record id="view_fatturapa_out_attachment_tree_state" model="ir.ui.view">
+        <field name="name">fatturapa.attachment.out.tree.state</field>
+        <field name="model">fatturapa.attachment.out</field>
+        <field name="inherit_id" ref="l10n_it_fatturapa_out.view_fatturapa_out_attachment_tree"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//field[@name='state']" position="replace">
+                <field name="e_state" />
+                
+            </xpath>
+            
+        </field>
+    </record>  
       
       
     <record id="efatturazione_send_einvoice_form_button" model="ir.ui.view">

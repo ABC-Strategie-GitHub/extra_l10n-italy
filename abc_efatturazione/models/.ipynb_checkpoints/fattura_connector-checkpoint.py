@@ -347,12 +347,12 @@ class AccountMove(models.Model):
 
                                         else:
 
-                                            resJson = zipfile.ZipFile(io.BytesIO(res.content), 'r')
+                                            resJsonZip = zipfile.ZipFile(io.BytesIO(res.content), 'r')
                                             date_dummy = (datetime.now() - timedelta(days=365))
-                                            for file in resJson.namelist():
+                                            for file in resJsonZip.namelist():
 
                                                 if file[-3:]=="xml":
-                                                    soup = BeautifulSoup(resJson.read(file), 'xml')
+                                                    soup = BeautifulSoup(resJsonZip.read(file), 'xml')
                                                     dateRic = soup.find('DataOraRicezione').string[:-10]
                                                     dateRic = datetime.strptime(dateRic, '%Y-%m-%dT%H:%M:%S')
 
@@ -493,7 +493,12 @@ class AccountMove(models.Model):
     def cron_getAllStatusAdE(self, size, page):
         self._getAllStatusAdE(size, page)
             
-
+class FatturaPAAttachmentOut(models.Model):
+    
+    _inherit = "fatturapa.attachment.out"
+    
+    e_state = fields.Selection(related='out_invoice_ids.e_state')
+            
             
 class FatturaPAAttachmentIn(models.Model):
     

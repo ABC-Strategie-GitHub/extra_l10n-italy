@@ -493,7 +493,12 @@ class AccountMove(models.Model):
     def cron_getAllStatusAdE(self, size, page):
         self._getAllStatusAdE(size, page)
             
-
+class FatturaPAAttachmentOut(models.Model):
+    
+    _inherit = "fatturapa.attachment.out"
+    
+    e_state = fields.Selection(related='out_invoice_ids.e_state')
+            
             
 class FatturaPAAttachmentIn(models.Model):
     
