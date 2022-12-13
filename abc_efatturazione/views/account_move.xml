@@ -5,7 +5,7 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="l10n_it_fatturapa_out.view_invoice_form_fatturapa"/>
         <field name="arch" type="xml">
-            
+
             <xpath expr="//field[@name='fatturapa_attachment_out_id']/../.." position="after">
                 <group colspan="4">
                     <field name="e_state" groups="base.group_no_one, base.user_admin" />
@@ -40,105 +40,119 @@
                     <button name="getStatusEfatturaAdE" string="Update E-Invoice Status" type="object"/>
                 </group>
             </xpath>
-            
+
         </field>
-    </record> 
-      
+    </record>
+
     <record id="view_fatturapa_out_attachment_form_state" model="ir.ui.view">
         <field name="name">fatturapa.attachment.out.form.state</field>
         <field name="model">fatturapa.attachment.out</field>
         <field name="inherit_id" ref="l10n_it_fatturapa_out.view_fatturapa_out_attachment_form"/>
         <field name="arch" type="xml">
-            
+
             <xpath expr="//field[@name='state']" position="attributes">
                 <attribute name="attrs">{'invisible': 1}</attribute>
-                
+
             </xpath>
-            
+
             <xpath expr="//header" position="inside">
                 <field name="e_state" widget="statusbar" statusbar_visible="draft,sending,sent,delivered,accepted"/>
             </xpath>
-            
+
         </field>
-        
-    </record>  
-      
+
+    </record>
+
         <record id="view_fatturapa_out_attachment_tree_state" model="ir.ui.view">
         <field name="name">fatturapa.attachment.out.tree.state</field>
         <field name="model">fatturapa.attachment.out</field>
         <field name="inherit_id" ref="l10n_it_fatturapa_out.view_fatturapa_out_attachment_tree"/>
         <field name="arch" type="xml">
-            
+
             <xpath expr="//field[@name='state']" position="replace">
                 <field name="e_state" />
-                
+
             </xpath>
-            
+
         </field>
-    </record>  
-      
-      
+    </record>
+
+
     <record id="efatturazione_send_einvoice_form_button" model="ir.ui.view">
         <field name="name">efatturazione.send.einvoice.form.button</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            
+
             <xpath expr="//header/button[1]" position="before">
                 <button name="%(abc_efatturazione.action_invia_efattura)d" type="action" class="btn-primary" string="Send E-invoice" attrs="{'invisible': ['|', ('e_state', 'not in', ('draft', 'error')), ('state', '!=', 'posted')]}" groups="abc_efatturazione.e_fattura_manager"/>
-                
+
             </xpath>
 
-            
+
             <xpath expr="//sheet/div[@name='button_box']" position="inside">
-                
+
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
                     string="Not Sent" attrs="{'invisible': [('e_state', '!=', 'draft')]}" style="color: grey"/>
-                
+
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
                     string="Sending" attrs="{'invisible': [('e_state', '!=', 'sending')]}" style="color: grey"/>
-                
+
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
                     string="Sent" attrs="{'invisible': [('e_state', '!=', 'sent')]}" style="color: green"/>
-                
+
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
                     string="Delivered" attrs="{'invisible': [('e_state', '!=', 'delivered')]}" style="color: green"/>
-                
+
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
                     string="Not Delivered" attrs="{'invisible': [('e_state', '!=', 'not_delivered')]}" style="color: orange"/>
-                
+
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
                     string="Confirmed ✓" attrs="{'invisible': [('e_state', '!=', 'accepted')]}" style="color: green"/>
-                
+
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
                     string="Refused" attrs="{'invisible': [('e_state', '!=', 'rejected')]}" style="color: red"/>
-                
+
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
                     string="Error" attrs="{'invisible': [('e_state', '!=', 'error')]}" style="color: red"/>
-                
+
             </xpath>
-            
+
         </field>
     </record>
-      
+
     <record id="efatturazione_send_einvoice_tree" model="ir.ui.view">
         <field name="name">efatturazione.send.einvoice.tree</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_out_invoice_tree"/>
         <field name="arch" type="xml">
 
-
-            
             <xpath expr="//field[@name='state']" position="after">
                 <field name="e_state" widget="badge" decoration-success="e_state == 'sent' or e_state =='delivered' or e_state=='accepted'"
-                decoration-danger="e_state == 'error' or e_state == 'rejected'" decoration-info="e_state == 'draft' or e_state == 'sending'" 
+                decoration-danger="e_state == 'error' or e_state == 'rejected'" decoration-info="e_state == 'draft' or e_state == 'sending'"
                 decoration-warning="e_state == 'not_delivered'"/>
             </xpath>
-            
+
         </field>
     </record>
-      
-      
+
+
+    <record id="efatturazione_send_einvoice_tree_nc" model="ir.ui.view">
+        <field name="name">efatturazione.send.einvoice.tree.nc</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="e_state" widget="badge" decoration-success="e_state == 'sent' or e_state =='delivered' or e_state=='accepted'"
+                decoration-danger="e_state == 'error' or e_state == 'rejected'" decoration-info="e_state == 'draft' or e_state == 'sending'"
+                decoration-warning="e_state == 'not_delivered'"/>
+            </xpath>
+
+        </field>
+    </record>
+
+
     <record id="efatturazione_efattura_state_tree_search" model="ir.ui.view">
         <field name="name">efatturazione.efattura.state.tree.search</field>
         <field name="model">account.move</field>
@@ -161,7 +175,7 @@
             </xpath>
         </field>
     </record>
-    
+
     <record id="efatturazione_dashboard_account_kanban" model="ir.ui.view">
         <field name="name">efatturazione.dashboard.account.kanban</field>
         <field name="model">account.journal</field>
@@ -185,8 +199,8 @@
             </xpath>
         </field>
     </record>
-      
-      
+
+
     <record id="efatturazione_journal_efattura_check_form" model="ir.ui.view">
         <field name="name">efatturazione.journal.efattura.check.form</field>
         <field name="model">account.journal</field>
@@ -197,8 +211,8 @@
             </field>
         </field>
     </record>
-      
-      
+
+
     <record id="fatturapa_attachment_in_form_abc" model="ir.ui.view">
         <field name="name">fatturapa.attachment.in.form.abc</field>
         <field name="model">fatturapa.attachment.in</field>
@@ -206,13 +220,13 @@
         <field name="arch" type="xml">
 
 
-            
+
             <xpath expr="//field[@name='xml_supplier_id']" position="after">
                 <field name="id_fatturazione_abc"/>
             </xpath>
-            
+
         </field>
     </record>
-       
+
   </data>
 </odoo>
