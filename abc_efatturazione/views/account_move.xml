@@ -8,11 +8,17 @@
 
             <xpath expr="//field[@name='fatturapa_attachment_out_id']/../.." position="after">
                 <group colspan="4">
-                    <field name="e_state" groups="base.group_no_one, base.user_admin" />
+                    <field name="e_state" groups="base.group_no_one, base.user_admin, abc_efatturazione.e_fattura_manager" />
                     <field name="sdi_file_name" readonly="1"/>
                 </group>
-                <group colspan="4">
-                    <field name="history" nolabel="1" readonly="0">
+                    <field name="history" nolabel="1" readonly="1" mode="tree,kanban">
+                        <tree string="History Change" >
+                            <field name="date"/>
+                            <field name="status_code"/>
+                            <field name="status_desc"/>
+                            <field name="note"/>
+                            <field name="type" groups="base.user_admin"/>
+                        </tree>
                         <form string="History Change">
                             <group>
                                 <field name="date"/>
@@ -24,21 +30,12 @@
                                 <newline/>
                                 <field name="xml_content"/>
                                 <newline/>
-                                <field name="type" groups="base.group_no_one"/>
+                                <field name="type" groups="base.user_admin"/>
                             </group>
                         </form>
-                        <tree string="History Change" decoration-danger="type == 'error'">
-                            <field name="date"/>
-                            <field name="status_code"/>
-                            <field name="status_desc"/>
-                            <field name="note"/>
-                            <field name="type" groups="base.group_no_one"/>
-                        </tree>
                     </field>
-                </group>
-                <group>
                     <button name="getStatusEfatturaAdE" string="Update E-Invoice Status" type="object"/>
-                </group>
+                
             </xpath>
 
         </field>
@@ -51,8 +48,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//field[@name='state']" position="attributes">
-                <attribute name="attrs">{'invisible': 1}</attribute>
-
+                <attribute name="invisible">1</attribute>
             </xpath>
 
             <xpath expr="//header" position="inside">
@@ -85,7 +81,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//header/button[1]" position="before">
-                <button name="%(abc_efatturazione.action_invia_efattura)d" type="action" class="btn-primary" string="Send E-invoice" attrs="{'invisible': ['|', ('e_state', 'not in', ('draft', 'error')), ('state', '!=', 'posted')]}" groups="abc_efatturazione.e_fattura_manager"/>
+                <button name="%(abc_efatturazione.action_invia_efattura)d" type="action" class="btn-primary" string="Send E-invoice" attrs="{'invisible': ['|', ('e_state', 'not in', ('draft', 'error')), ('state', '!=', 'posted')]}" groups="base.group_no_one, base.user_admin, abc_efatturazione.e_fattura_manager"/>
 
             </xpath>
 
@@ -93,28 +89,28 @@
             <xpath expr="//sheet/div[@name='button_box']" position="inside">
 
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
-                    string="Not Sent" attrs="{'invisible': [('e_state', '!=', 'draft')]}" style="color: grey"/>
+                    string="Not Sent" groups="base.group_no_one, base.user_admin, abc_efatturazione.e_fattura_manager" attrs="{'invisible': [('e_state', '!=', 'draft')]}" style="color: grey"/>
 
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
-                    string="Sending" attrs="{'invisible': [('e_state', '!=', 'sending')]}" style="color: grey"/>
+                    string="Sending" groups="base.group_no_one, base.user_admin, abc_efatturazione.e_fattura_manager" attrs="{'invisible': [('e_state', '!=', 'sending')]}" style="color: grey"/>
 
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
-                    string="Sent" attrs="{'invisible': [('e_state', '!=', 'sent')]}" style="color: green"/>
+                    string="Sent" groups="base.group_no_one, base.user_admin, abc_efatturazione.e_fattura_manager" attrs="{'invisible': [('e_state', '!=', 'sent')]}" style="color: green"/>
 
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
-                    string="Delivered" attrs="{'invisible': [('e_state', '!=', 'delivered')]}" style="color: green"/>
+                    string="Delivered" groups="base.group_no_one, base.user_admin, abc_efatturazione.e_fattura_manager" attrs="{'invisible': [('e_state', '!=', 'delivered')]}" style="color: green"/>
 
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
-                    string="Not Delivered" attrs="{'invisible': [('e_state', '!=', 'not_delivered')]}" style="color: orange"/>
+                    string="Not Delivered" groups="base.group_no_one, base.user_admin, abc_efatturazione.e_fattura_manager" attrs="{'invisible': [('e_state', '!=', 'not_delivered')]}" style="color: orange"/>
 
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
-                    string="Confirmed ✓" attrs="{'invisible': [('e_state', '!=', 'accepted')]}" style="color: green"/>
+                    string="Confirmed ✓" groups="base.group_no_one, base.user_admin, abc_efatturazione.e_fattura_manager" attrs="{'invisible': [('e_state', '!=', 'accepted')]}" style="color: green"/>
 
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
-                    string="Refused" attrs="{'invisible': [('e_state', '!=', 'rejected')]}" style="color: red"/>
+                    string="Refused" groups="base.group_no_one, base.user_admin, abc_efatturazione.e_fattura_manager" attrs="{'invisible': [('e_state', '!=', 'rejected')]}" style="color: red"/>
 
                 <button name="view_preview_invoice_file" type="object" class="oe_stat_button" icon="fa-paper-plane"
-                    string="Error" attrs="{'invisible': [('e_state', '!=', 'error')]}" style="color: red"/>
+                    string="Error" groups="base.group_no_one, base.user_admin, abc_efatturazione.e_fattura_manager" attrs="{'invisible': [('e_state', '!=', 'error')]}" style="color: red"/>
 
             </xpath>
 

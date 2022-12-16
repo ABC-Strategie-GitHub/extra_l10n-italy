@@ -108,7 +108,7 @@ class AccountMove(models.Model):
         session.mount('https://', TLSAdapter())
         #payload necessario per la chiamata, i dati non devono essere visibili nell'url
         payload = ('grant_type=password&username='+username+'&password='+password+'')
-
+        
         res = session.post(url, data = payload, headers={'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'})
         if(res.status_code != 200):
 

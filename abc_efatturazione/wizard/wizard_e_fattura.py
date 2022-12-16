@@ -8,7 +8,7 @@ import base64
 
 
 from odoo import models, fields, api, _
-from odoo.exceptions import Warning
+from odoo.exceptions import UserError
 
 
 _logger = logging.getLogger('Sending E-Invoice')
@@ -58,7 +58,7 @@ class WizardEFattura(models.TransientModel):
         invoice_ids = self.env.context.get('active_ids', [])
 
         if not invoice_ids:
-            raise Warning('No invoices to send')
+            raise UserError('No invoices to send')
 
         invoice_model = self.env['account.move']
         invoices = invoice_model.browse(invoice_ids)
@@ -95,6 +95,6 @@ class WizardEFattura(models.TransientModel):
         #Se c'e' errore lo stampo, non si chiudera' il wizard ovviamente, TO FIX?
         if(len(error)>0):
             text = u'The following invoices have errors:\n' + _(error)
-            raise Warning(_(text))
+            raise UserError(_(text))
 
         return {'type': 'ir.actions.act_window_close'}
