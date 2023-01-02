@@ -10,7 +10,7 @@
     'website': "https://www.abcstrategie.it",
 
     'category': 'Einvoice',
-    'version': '16.0.0.1',
+    'version': '16.0.0.2',
 
     'depends': ['base', 'account', 'l10n_it_fatturapa', 'l10n_it_fatturapa_out', 'l10n_it_fatturapa_in', 'sale', 'web', 'mail'],
 
