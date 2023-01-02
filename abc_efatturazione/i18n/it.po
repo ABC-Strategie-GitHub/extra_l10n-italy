@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-06 12:57+0000\n"
-"PO-Revision-Date: 2022-10-06 15:06+0200\n"
+"POT-Creation-Date: 2023-01-02 14:32+0000\n"
+"PO-Revision-Date: 2023-01-02 15:35+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it\n"
@@ -45,6 +45,11 @@ msgid "Cancel"
 msgstr "Annulla"
 
 #. module: abc_efatturazione
+#: model:ir.model.fields,help:abc_efatturazione.field_account_bank_statement_import_journal_creation__e_fattura model:ir.model.fields,help:abc_efatturazione.field_account_journal__e_fattura
+msgid "Check this box to determine that each entry of this journal            will be managed with Italian Electronical Invoice."
+msgstr "Seleziona questa casella per determinare che ogni voce di questo giornale sarà gestita con Fattura Elettronica Italiana."
+
+#. module: abc_efatturazione
 #: model:ir.model,name:abc_efatturazione.model_res_config_settings
 msgid "Config Settings"
 msgstr "Impostazioni di configurazione"
@@ -55,14 +60,12 @@ msgid "Confirmed ✓"
 msgstr "Confermata ✓"
 
 #. module: abc_efatturazione
-#: model:ir.model.fields,field_description:abc_efatturazione.field_efattura_history__create_uid
-#: model:ir.model.fields,field_description:abc_efatturazione.field_wizard_efattura__create_uid
+#: model:ir.model.fields,field_description:abc_efatturazione.field_efattura_history__create_uid model:ir.model.fields,field_description:abc_efatturazione.field_wizard_efattura__create_uid
 msgid "Created by"
 msgstr "Creato da"
 
 #. module: abc_efatturazione
-#: model:ir.model.fields,field_description:abc_efatturazione.field_efattura_history__create_date
-#: model:ir.model.fields,field_description:abc_efatturazione.field_wizard_efattura__create_date
+#: model:ir.model.fields,field_description:abc_efatturazione.field_efattura_history__create_date model:ir.model.fields,field_description:abc_efatturazione.field_wizard_efattura__create_date
 msgid "Created on"
 msgstr "Creato"
 
@@ -72,16 +75,14 @@ msgid "Date Action"
 msgstr "Data"
 
 #. module: abc_efatturazione
-#: model:ir.model.fields.selection,name:abc_efatturazione.selection__account_move__e_state__delivered
-#: model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_send_einvoice_form_button
+#: model:ir.model.fields.selection,name:abc_efatturazione.selection__account_move__e_state__delivered model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_send_einvoice_form_button
 msgid "Delivered"
 msgstr "Consegnata"
 
 #. module: abc_efatturazione
-#: model:ir.model.fields,field_description:abc_efatturazione.field_account_move__display_name
-#: model:ir.model.fields,field_description:abc_efatturazione.field_efattura_history__display_name
-#: model:ir.model.fields,field_description:abc_efatturazione.field_fatturapa_attachment_in__display_name
-#: model:ir.model.fields,field_description:abc_efatturazione.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:abc_efatturazione.field_account_journal__display_name model:ir.model.fields,field_description:abc_efatturazione.field_account_move__display_name
+#: model:ir.model.fields,field_description:abc_efatturazione.field_efattura_history__display_name model:ir.model.fields,field_description:abc_efatturazione.field_fatturapa_attachment_in__display_name
+#: model:ir.model.fields,field_description:abc_efatturazione.field_fatturapa_attachment_out__display_name model:ir.model.fields,field_description:abc_efatturazione.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:abc_efatturazione.field_wizard_efattura__display_name
 msgid "Display Name"
 msgstr "Nome visualizzato"
@@ -92,22 +93,117 @@ msgid "Draft"
 msgstr "Bozza"
 
 #. module: abc_efatturazione
-#: model:ir.cron,cron_name:abc_efatturazione.ir_cron_check_new_status
-#: model:ir.cron,name:abc_efatturazione.ir_cron_check_new_status
-msgid "E-Fattura - Check New Status"
-msgstr "E-Fattura - Verifica nuovi stati"
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_check_new_status_1_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_check_new_status_1
+#: model:ir.cron,name:abc_efatturazione.ir_cron_check_new_status_1
+msgid "E-Fattura - Check New Status 1"
+msgstr ""
 
 #. module: abc_efatturazione
-#: model:ir.actions.server,name:abc_efatturazione.ir_cron_get_incoming_efatture_ir_actions_server
-#: model:ir.cron,cron_name:abc_efatturazione.ir_cron_get_incoming_efatture
-#: model:ir.cron,name:abc_efatturazione.ir_cron_get_incoming_efatture
-msgid "E-Fattura - Get Incoming Invoice XML"
-msgstr "E-Fattura - Ottieni XML fattura in entrata"
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_check_new_status_10_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_check_new_status_10
+#: model:ir.cron,name:abc_efatturazione.ir_cron_check_new_status_10
+msgid "E-Fattura - Check New Status 10"
+msgstr ""
 
 #. module: abc_efatturazione
-#: model:ir.actions.server,name:abc_efatturazione.ir_cron_check_new_status_ir_actions_server
-msgid "E-Invoice - Check New Status"
-msgstr "E-fattura - Verifica nuovi stati"
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_check_new_status_2_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_check_new_status_2
+#: model:ir.cron,name:abc_efatturazione.ir_cron_check_new_status_2
+msgid "E-Fattura - Check New Status 2"
+msgstr ""
+
+#. module: abc_efatturazione
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_check_new_status_3_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_check_new_status_3
+#: model:ir.cron,name:abc_efatturazione.ir_cron_check_new_status_3
+msgid "E-Fattura - Check New Status 3"
+msgstr ""
+
+#. module: abc_efatturazione
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_check_new_status_4_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_check_new_status_4
+#: model:ir.cron,name:abc_efatturazione.ir_cron_check_new_status_4
+msgid "E-Fattura - Check New Status 4"
+msgstr ""
+
+#. module: abc_efatturazione
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_check_new_status_5_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_check_new_status_5
+#: model:ir.cron,name:abc_efatturazione.ir_cron_check_new_status_5
+msgid "E-Fattura - Check New Status 5"
+msgstr ""
+
+#. module: abc_efatturazione
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_check_new_status_6_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_check_new_status_6
+#: model:ir.cron,name:abc_efatturazione.ir_cron_check_new_status_6
+msgid "E-Fattura - Check New Status 6"
+msgstr ""
+
+#. module: abc_efatturazione
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_check_new_status_7_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_check_new_status_7
+#: model:ir.cron,name:abc_efatturazione.ir_cron_check_new_status_7
+msgid "E-Fattura - Check New Status 7"
+msgstr ""
+
+#. module: abc_efatturazione
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_check_new_status_8_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_check_new_status_8
+#: model:ir.cron,name:abc_efatturazione.ir_cron_check_new_status_8
+msgid "E-Fattura - Check New Status 8"
+msgstr ""
+
+#. module: abc_efatturazione
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_check_new_status_9_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_check_new_status_9
+#: model:ir.cron,name:abc_efatturazione.ir_cron_check_new_status_9
+msgid "E-Fattura - Check New Status 9"
+msgstr ""
+
+#. module: abc_efatturazione
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_get_incoming_efatture_1_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_get_incoming_efatture_1
+#: model:ir.cron,name:abc_efatturazione.ir_cron_get_incoming_efatture_1
+msgid "E-Fattura - Get Incoming Invoice XML 1"
+msgstr ""
+
+#. module: abc_efatturazione
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_get_incoming_efatture_2_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_get_incoming_efatture_2
+#: model:ir.cron,name:abc_efatturazione.ir_cron_get_incoming_efatture_2
+msgid "E-Fattura - Get Incoming Invoice XML 2"
+msgstr ""
+
+#. module: abc_efatturazione
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_get_incoming_efatture_3_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_get_incoming_efatture_3
+#: model:ir.cron,name:abc_efatturazione.ir_cron_get_incoming_efatture_3
+msgid "E-Fattura - Get Incoming Invoice XML 3"
+msgstr ""
+
+#. module: abc_efatturazione
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_get_incoming_efatture_4_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_get_incoming_efatture_4
+#: model:ir.cron,name:abc_efatturazione.ir_cron_get_incoming_efatture_4
+msgid "E-Fattura - Get Incoming Invoice XML 4"
+msgstr ""
+
+#. module: abc_efatturazione
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_get_incoming_efatture_5_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_get_incoming_efatture_5
+#: model:ir.cron,name:abc_efatturazione.ir_cron_get_incoming_efatture_5
+msgid "E-Fattura - Get Incoming Invoice XML 5"
+msgstr ""
+
+#. module: abc_efatturazione
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_get_incoming_efatture_6_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_get_incoming_efatture_6
+#: model:ir.cron,name:abc_efatturazione.ir_cron_get_incoming_efatture_6
+msgid "E-Fattura - Get Incoming Invoice XML 6"
+msgstr ""
+
+#. module: abc_efatturazione
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_get_incoming_efatture_7_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_get_incoming_efatture_7
+#: model:ir.cron,name:abc_efatturazione.ir_cron_get_incoming_efatture_7
+msgid "E-Fattura - Get Incoming Invoice XML 7"
+msgstr ""
+
+#. module: abc_efatturazione
+#: model:ir.actions.server,name:abc_efatturazione.ir_cron_get_incoming_efatture_8_ir_actions_server model:ir.cron,cron_name:abc_efatturazione.ir_cron_get_incoming_efatture_8
+#: model:ir.cron,name:abc_efatturazione.ir_cron_get_incoming_efatture_8
+msgid "E-Fattura - Get Incoming Invoice XML 8"
+msgstr ""
+
+#. module: abc_efatturazione
+#: model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_efattura_state_tree_search
+msgid "E-Fattura State"
+msgstr "Stato E-Fattura"
 
 #. module: abc_efatturazione
 #: model_terms:ir.ui.view,arch_db:abc_efatturazione.view_account_config_settings
@@ -120,10 +216,18 @@ msgid "E-bill import file"
 msgstr "File importato e-fattura"
 
 #. module: abc_efatturazione
-#: model:ir.model,name:abc_efatturazione.model_efattura_history
-#: model:ir.model.fields,field_description:abc_efatturazione.field_account_bank_statement_line__history
-#: model:ir.model.fields,field_description:abc_efatturazione.field_account_move__history
-#: model:ir.model.fields,field_description:abc_efatturazione.field_account_payment__history
+#: model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_dashboard_account_kanban
+msgid "E-fatture in error"
+msgstr "E-fattura in errore"
+
+#. module: abc_efatturazione
+#: model:ir.model,name:abc_efatturazione.model_fatturapa_attachment_out
+msgid "E-invoice Export File"
+msgstr "File esportato e-fattura"
+
+#. module: abc_efatturazione
+#: model:ir.model,name:abc_efatturazione.model_efattura_history model:ir.model.fields,field_description:abc_efatturazione.field_account_bank_statement_line__history
+#: model:ir.model.fields,field_description:abc_efatturazione.field_account_move__history model:ir.model.fields,field_description:abc_efatturazione.field_account_payment__history
 msgid "E-invoice history"
 msgstr "Storico E-invoice"
 
@@ -138,13 +242,57 @@ msgid "E-invoicing User"
 msgstr "Utente E-fatturazione"
 
 #. module: abc_efatturazione
+#: model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_efattura_state_tree_search
+msgid "EFatt Accepted"
+msgstr "EFatt Accettata"
+
+#. module: abc_efatturazione
+#: model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_efattura_state_tree_search
+msgid "EFatt Delivered"
+msgstr "EFatt Consegnata"
+
+#. module: abc_efatturazione
+#: model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_efattura_state_tree_search
+msgid "EFatt Draft"
+msgstr "EFatt Bozza"
+
+#. module: abc_efatturazione
+#: model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_efattura_state_tree_search
+msgid "EFatt Error"
+msgstr "EFatt Errore"
+
+#. module: abc_efatturazione
+#: model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_efattura_state_tree_search
+msgid "EFatt Not Delivered"
+msgstr "EFatt Non Consegnata"
+
+#. module: abc_efatturazione
+#: model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_efattura_state_tree_search
+msgid "EFatt Rejected"
+msgstr "EFatt Rifiutata"
+
+#. module: abc_efatturazione
+#: model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_efattura_state_tree_search
+msgid "EFatt Sending"
+msgstr "EFatt Invio in corso"
+
+#. module: abc_efatturazione
+#: model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_efattura_state_tree_search
+msgid "EFatt Sent"
+msgstr "EFatt Inviata"
+
+#. module: abc_efatturazione
 #: model:ir.model.fields.selection,name:abc_efatturazione.selection__efattura_history__type__error
 msgid "ERROR"
 msgstr "ERRORE"
 
 #. module: abc_efatturazione
-#: model:ir.model.fields.selection,name:abc_efatturazione.selection__account_move__e_state__error
-#: model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_send_einvoice_form_button
+#: model:ir.model.fields,field_description:abc_efatturazione.field_account_bank_statement_import_journal_creation__e_fattura model:ir.model.fields,field_description:abc_efatturazione.field_account_journal__e_fattura
+msgid "Electronic Invoice"
+msgstr "Fattura Elettronica"
+
+#. module: abc_efatturazione
+#: model:ir.model.fields.selection,name:abc_efatturazione.selection__account_move__e_state__error model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_send_einvoice_form_button
 msgid "Error"
 msgstr "Errore"
 
@@ -154,13 +302,22 @@ msgid "History Change"
 msgstr "Storico cambiamenti"
 
 #. module: abc_efatturazione
-#: model:ir.model.fields,field_description:abc_efatturazione.field_account_move__id
-#: model:ir.model.fields,field_description:abc_efatturazione.field_efattura_history__id
-#: model:ir.model.fields,field_description:abc_efatturazione.field_fatturapa_attachment_in__id
-#: model:ir.model.fields,field_description:abc_efatturazione.field_res_config_settings__id
+#: model:ir.model.fields,field_description:abc_efatturazione.field_account_journal__id model:ir.model.fields,field_description:abc_efatturazione.field_account_move__id
+#: model:ir.model.fields,field_description:abc_efatturazione.field_efattura_history__id model:ir.model.fields,field_description:abc_efatturazione.field_fatturapa_attachment_in__id
+#: model:ir.model.fields,field_description:abc_efatturazione.field_fatturapa_attachment_out__id model:ir.model.fields,field_description:abc_efatturazione.field_res_config_settings__id
 #: model:ir.model.fields,field_description:abc_efatturazione.field_wizard_efattura__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
+
+#. module: abc_efatturazione
+#: model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_dashboard_account_kanban
+msgid "Invoice to Sent"
+msgstr "Fatture da Inviare"
+
+#. module: abc_efatturazione
+#: model:ir.model,name:abc_efatturazione.model_account_journal
+msgid "Journal"
+msgstr "Registro"
 
 #. module: abc_efatturazione
 #: model:ir.model,name:abc_efatturazione.model_account_move
@@ -168,23 +325,20 @@ msgid "Journal Entry"
 msgstr "Registrazione contabile"
 
 #. module: abc_efatturazione
-#: model:ir.model.fields,field_description:abc_efatturazione.field_account_move____last_update
-#: model:ir.model.fields,field_description:abc_efatturazione.field_efattura_history____last_update
-#: model:ir.model.fields,field_description:abc_efatturazione.field_fatturapa_attachment_in____last_update
-#: model:ir.model.fields,field_description:abc_efatturazione.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:abc_efatturazione.field_account_journal____last_update model:ir.model.fields,field_description:abc_efatturazione.field_account_move____last_update
+#: model:ir.model.fields,field_description:abc_efatturazione.field_efattura_history____last_update model:ir.model.fields,field_description:abc_efatturazione.field_fatturapa_attachment_in____last_update
+#: model:ir.model.fields,field_description:abc_efatturazione.field_fatturapa_attachment_out____last_update model:ir.model.fields,field_description:abc_efatturazione.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:abc_efatturazione.field_wizard_efattura____last_update
 msgid "Last Modified on"
 msgstr "Ultima modifica il"
 
 #. module: abc_efatturazione
-#: model:ir.model.fields,field_description:abc_efatturazione.field_efattura_history__write_uid
-#: model:ir.model.fields,field_description:abc_efatturazione.field_wizard_efattura__write_uid
+#: model:ir.model.fields,field_description:abc_efatturazione.field_efattura_history__write_uid model:ir.model.fields,field_description:abc_efatturazione.field_wizard_efattura__write_uid
 msgid "Last Updated by"
 msgstr "Ultimi aggiornamento di"
 
 #. module: abc_efatturazione
-#: model:ir.model.fields,field_description:abc_efatturazione.field_efattura_history__write_date
-#: model:ir.model.fields,field_description:abc_efatturazione.field_wizard_efattura__write_date
+#: model:ir.model.fields,field_description:abc_efatturazione.field_efattura_history__write_date model:ir.model.fields,field_description:abc_efatturazione.field_wizard_efattura__write_date
 msgid "Last Updated on"
 msgstr "Ultimo aggiornamento"
 
@@ -194,6 +348,11 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: abc_efatturazione
+#: model:ir.model.fields.selection,name:abc_efatturazione.selection__account_move__e_state__not_delivered model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_send_einvoice_form_button
+msgid "Not Delivered"
+msgstr "Non Consegnata"
+
+#. module: abc_efatturazione
 #: model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_send_einvoice_form_button
 msgid "Not Sent"
 msgstr "Non inviata"
@@ -201,17 +360,17 @@ msgstr "Non inviata"
 #. module: abc_efatturazione
 #: model:ir.model.fields,field_description:abc_efatturazione.field_efattura_history__note
 msgid "Note"
-msgstr "Note"
+msgstr ""
 
 #. module: abc_efatturazione
 #: model:ir.model.fields.selection,name:abc_efatturazione.selection__efattura_history__type__positive
 msgid "OK"
-msgstr "OK"
+msgstr ""
 
 #. module: abc_efatturazione
 #: model:ir.model.fields,field_description:abc_efatturazione.field_res_config_settings__password_efattura
 msgid "Password"
-msgstr "Password"
+msgstr ""
 
 #. module: abc_efatturazione
 #: model:ir.model.fields,help:abc_efatturazione.field_res_config_settings__password_efattura
@@ -229,8 +388,7 @@ msgid "Rejected"
 msgstr "Rifiutata"
 
 #. module: abc_efatturazione
-#: model:ir.model.fields,field_description:abc_efatturazione.field_account_bank_statement_line__sdi_file_name
-#: model:ir.model.fields,field_description:abc_efatturazione.field_account_move__sdi_file_name
+#: model:ir.model.fields,field_description:abc_efatturazione.field_account_bank_statement_line__sdi_file_name model:ir.model.fields,field_description:abc_efatturazione.field_account_move__sdi_file_name
 #: model:ir.model.fields,field_description:abc_efatturazione.field_account_payment__sdi_file_name
 msgid "Sdi File Name"
 msgstr "Nome file SDI"
@@ -246,8 +404,7 @@ msgid "Send Invoice"
 msgstr "Invia Fattura"
 
 #. module: abc_efatturazione
-#: model:ir.model.fields.selection,name:abc_efatturazione.selection__account_move__e_state__sending
-#: model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_send_einvoice_form_button
+#: model:ir.model.fields.selection,name:abc_efatturazione.selection__account_move__e_state__sending model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_send_einvoice_form_button
 msgid "Sending"
 msgstr "Invio in corso"
 
@@ -262,15 +419,13 @@ msgid "Sending E-invoice"
 msgstr "Invio E-Fattura"
 
 #. module: abc_efatturazione
-#: model:ir.model.fields.selection,name:abc_efatturazione.selection__account_move__e_state__sent
-#: model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_send_einvoice_form_button
+#: model:ir.model.fields.selection,name:abc_efatturazione.selection__account_move__e_state__sent model_terms:ir.ui.view,arch_db:abc_efatturazione.efatturazione_send_einvoice_form_button
 msgid "Sent"
 msgstr "Inviata"
 
 #. module: abc_efatturazione
-#: model:ir.model.fields,field_description:abc_efatturazione.field_account_bank_statement_line__e_state
-#: model:ir.model.fields,field_description:abc_efatturazione.field_account_move__e_state
-#: model:ir.model.fields,field_description:abc_efatturazione.field_account_payment__e_state
+#: model:ir.model.fields,field_description:abc_efatturazione.field_account_bank_statement_line__e_state model:ir.model.fields,field_description:abc_efatturazione.field_account_move__e_state
+#: model:ir.model.fields,field_description:abc_efatturazione.field_account_payment__e_state model:ir.model.fields,field_description:abc_efatturazione.field_fatturapa_attachment_out__e_state
 msgid "State E-Invoice"
 msgstr "Stato E-fattura"
 
@@ -297,12 +452,12 @@ msgstr "Aggiorna stato E-fattura"
 #. module: abc_efatturazione
 #: model:ir.model.fields,field_description:abc_efatturazione.field_res_config_settings__urlBase
 msgid "Url base"
-msgstr "Url base"
+msgstr ""
 
 #. module: abc_efatturazione
 #: model:ir.model.fields,field_description:abc_efatturazione.field_res_config_settings__urlLogin
 msgid "Url login"
-msgstr "Url login"
+msgstr ""
 
 #. module: abc_efatturazione
 #: model:ir.model.fields,help:abc_efatturazione.field_res_config_settings__urlLogin
@@ -317,7 +472,7 @@ msgstr "Url, Username and Password per connettere Odoo al sistema di E-fatturazi
 #. module: abc_efatturazione
 #: model:ir.model.fields,field_description:abc_efatturazione.field_res_config_settings__apiKey_efattura
 msgid "Username"
-msgstr "Username"
+msgstr ""
 
 #. module: abc_efatturazione
 #: model:ir.model.fields,help:abc_efatturazione.field_res_config_settings__apiKey_efattura
