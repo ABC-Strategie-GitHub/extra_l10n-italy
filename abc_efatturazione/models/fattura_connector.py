@@ -680,7 +680,7 @@ class FatturaPAAttachmentIn(models.Model):
                                 _logger.info("Import Supplier Invoice - ERROR imported INVOICE {c} - {f}".format(
                                     c=id, f=vat))
                                 continue
-                            einvoice_in._inverse_get_date()
+                            
 
         #C'e' un errore nella chiamata           
         else:
@@ -762,7 +762,7 @@ class FatturaPAAttachmentIn(models.Model):
                         _logger.info("Import Supplier Invoice - ERROR imported INVOICE {c} - {f}".format(
                             c=id, f=vat))
                         pass
-                    einvoice_in._inverse_get_date()
+                    
         
     #Funzione per la cron
     def cron_receiveEfatturaAdE(self, size, page):
