@@ -509,7 +509,7 @@ class FatturaPAAttachmentIn(models.Model):
                                 copy=False)
     
     date_in_invoice = fields.Date(compute="_inverse_get_date", store=True, readonly=0)
-    
+
     @api.depends('invoices_date')
     def _inverse_get_date(self):
         for attach_in in self:
@@ -520,7 +520,7 @@ class FatturaPAAttachmentIn(models.Model):
             elif attach_in.invoices_date and not attach_in.date_in_invoice:
                 datas = attach_in.invoices_date.split(',')
                 attach_in.date_in_invoice = datetime.strptime(
-                    datas[0], "%m/%d/%Y")
+                    datas[0], "%d/%m/%Y")
                 
     
     #Chiamata di login che permette di ottenere il token che verra' utilizzato nelle altre chiamate
