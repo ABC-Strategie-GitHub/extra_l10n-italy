@@ -519,8 +519,10 @@ class FatturaPAAttachmentIn(models.Model):
                     attach_in.date_in_invoice, "%Y-%m-%d")})
             elif attach_in.invoices_date and not attach_in.date_in_invoice:
                 datas = attach_in.invoices_date.split(',')
-                attach_in.date_in_invoice = datetime.strptime(
-                    datas[0], "%d/%m/%Y")
+                to_convert = datas[0]
+                to_convert = datetime.strptime(
+                    to_convert, "%m/%d/%Y")
+                attach_in.date_in_invoice = to_convert.strftime("%d/%m/%Y")
     
     #Chiamata di login che permette di ottenere il token che verra' utilizzato nelle altre chiamate
     def _loginEfattura(self):
