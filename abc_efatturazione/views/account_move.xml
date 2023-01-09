@@ -219,11 +219,15 @@
         <field name="inherit_id" ref="l10n_it_fatturapa_in.view_fatturapa_in_attachment_form"/>
         <field name="arch" type="xml">
 
-
-
             <xpath expr="//field[@name='xml_supplier_id']" position="after">
                 <field name="id_fatturazione_abc"/>
             </xpath>
+            <field name="invoices_date" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="invoices_date" position="after">
+                <field name="date_in_invoice" readonly="1"/>
+            </field>
 
         </field>
     </record>
