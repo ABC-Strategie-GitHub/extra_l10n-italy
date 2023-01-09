@@ -227,6 +227,21 @@
 
         </field>
     </record>
+    
+    <record id="efatturazione_invoice_in_fatturapa_attachment_tree_inherit" model="ir.ui.view">
+        <field name="name">efatturazione.invoice.in.fatturapa.attachment.tree_inherit</field>
+        <field name="model">fatturapa.attachment.in</field>
+        <field name="inherit_id" ref="l10n_it_fatturapa_in.view_fatturapa_in_attachment_tree"/>
+        <field name="arch" type="xml">
+            <field name="invoices_date" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="invoices_date" position="after">
+                <field name="date_in_invoice" readonly="1"/>
+            </field>
+            
+        </field>
+    </record>
 
   </data>
 </odoo>
