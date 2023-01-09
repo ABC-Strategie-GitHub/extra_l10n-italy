@@ -508,6 +508,20 @@ class FatturaPAAttachmentIn(models.Model):
                                 size=128, 
                                 copy=False)
     
+    date_in_invoice = fields.Date(compute="_inverse_get_date", store=True, readonly=0)
+    
+    @api.depends('invoices_date')
+    def _inverse_get_date(self):
+        for attach_in in self:
+            if not attach_in.invoices_date and attach_in.date_in_invoice:
+                attach_in.write({
+                    "invoices_date": datetime.strftime(
+                    attach_in.date_in_invoice, "%Y-%m-%d")})
+            elif attach_in.invoices_date and not attach_in.date_in_invoice:
+                datas = attach_in.invoices_date.split(',')
+                attach_in.date_in_invoice = datetime.strptime(
+                    datas[0], "%d/%m/%Y")
+    
     #Chiamata di login che permette di ottenere il token che verra' utilizzato nelle altre chiamate
     def _loginEfattura(self):
             if(self.sudo().env['res.config.settings'].get_values()['password_efattura'] and self.sudo().env['res.config.settings'].get_values()['apiKey_efattura']):
@@ -665,6 +679,7 @@ class FatturaPAAttachmentIn(models.Model):
                                 _logger.info("Import Supplier Invoice - ERROR imported INVOICE {c} - {f}".format(
                                     c=id, f=vat))
                                 continue
+                            einvoice_in._inverse_get_date()
 
         #C'e' un errore nella chiamata           
         else:
@@ -746,6 +761,7 @@ class FatturaPAAttachmentIn(models.Model):
                         _logger.info("Import Supplier Invoice - ERROR imported INVOICE {c} - {f}".format(
                             c=id, f=vat))
                         pass
+                    einvoice_in._inverse_get_date()
         
     #Funzione per la cron
     def cron_receiveEfatturaAdE(self, size, page):
